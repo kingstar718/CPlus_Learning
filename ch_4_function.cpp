@@ -64,6 +64,28 @@ string::size_type find_char(const string &s, char c, string::size_type &occurs) 
     return ret;
 }
 
+void ch_6_2_3_const_pra() {
+    //指针或引用形参const
+    int i = 42;
+    const int *cp = &i; //正确，蛋cp不能改变i
+    const int &r = i; //正确，但r不能改变i
+    const int &r2 = 42; //正确
+
+}
+
+//数组形参
+void ch_6_2_4_array_pra() {
+    //形式不同的等价函数，每个函数都有一个const int*类型的形参
+    void print(const int *);
+    void print(const int[]);
+    void print(const int[10]);
+
+    int i = 0, j[2] = {0, 1};
+    print(&i);
+    print(j);
+}
+
+
 int main() {
 
     int j = fact(5);
@@ -90,8 +112,7 @@ int main() {
     auto index = find_char(s, 'o', ctr);
     cout << "index = " << index << " , ctr = " << ctr << endl;
 
-    //6.2.3 继续
-
+    ch_6_2_4_array_pra();
 
     return 0;
 }
