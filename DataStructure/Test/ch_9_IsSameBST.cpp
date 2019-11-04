@@ -29,3 +29,25 @@
  * No
  * No
  */
+
+/**
+ * 1、建一棵树
+ * 2、建搜索树
+ * 3、判断一序列是否与搜索树一致
+ */
+
+typedef struct TreeNode *Tree;
+struct TreeNode {
+    int v;
+    Tree Left, Right;
+    int flag; // 判别一个序列是否一致  被访问过的节点设为1 没有被访问过设为0
+};
+
+int main(){
+    //对每组数据
+    // 读入N和L
+    // 根据第一行序列建树T
+    // 依据树T分别判断后面的L个序列是否能与T形成同一个搜索树并输出结果
+
+    return 0;
+}
