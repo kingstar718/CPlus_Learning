@@ -35,6 +35,8 @@
  * 2、建搜索树
  * 3、判断一序列是否与搜索树一致
  */
+#include <cstdio>
+#include <cstdlib>
 
 typedef struct TreeNode *Tree;
 struct TreeNode {
@@ -43,11 +45,137 @@ struct TreeNode {
     int flag; // 判别一个序列是否一致  被访问过的节点设为1 没有被访问过设为0
 };
 
-int main(){
+Tree MakeTree(int N);
+
+Tree Insert(Tree T, int V);
+
+int Judge(Tree T, int N);
+
+Tree NewNode(int V);
+
+void Reset(Tree T);
+
+void FreeTree(Tree T);
+
+// 程序有问题
+int main() {
+    int N, L, i;
+    Tree T;
+    scanf("%d", &N);
     //对每组数据
     // 读入N和L
     // 根据第一行序列建树T
     // 依据树T分别判断后面的L个序列是否能与T形成同一个搜索树并输出结果
-
+    while (N) {
+        scanf("%d", &L);
+        T = MakeTree(N);
+        for (i = 0; i < L; i++) {
+            if (Judge(T, N))
+                printf("Yes\n");
+            else
+                printf("No\n");
+            Reset(T);
+        }
+        FreeTree(T);
+        scanf("%d", &N);
+    }
     return 0;
+}
+
+// 如何建搜索树
+Tree MakeTree(int N) {
+    Tree T;
+    int i, V;
+
+    scanf("%d", &V);
+    T = NewNode(V);
+    for (i = 0; i < N; ++i) {
+        scanf("%d", &V);
+        T = Insert(T, V);
+    }
+    return T;
+}
+
+Tree Insert(Tree T, int V) {
+    if (!T) {
+        T = NewNode(V); //T不存在就新建树
+    } else {
+        if (V > T->v) { //插入值大于当前就往右
+            T->Right = Insert(T->Right, V);
+        } else { // 小于就往左子树
+            T->Left = Insert(T->Left, V);
+        }
+    }
+    return T;
+}
+
+Tree NewNode(int V) {
+    Tree T = (Tree) malloc(sizeof(struct TreeNode));
+    T->v = V;
+    T->Left = T->Right = NULL;
+    T->flag = 0; //0表示节点未被访问
+    return T;
+}
+
+/*
+ * 如何判别
+ * 构造 3 1 4 2的树T，在树T中搜索3 2 4 1中的每个数
+ * > 如果每次搜索所经过的结点在前面均出现过，则一致
+ * > 否则（某次搜索中遇到前面未出现的结点），则不一致
+ */
+int check(Tree T, int V) {
+    if (T->flag) { //1表示点已被搜寻过
+        if (V < T->v) {
+            return check(T->Left, V);
+        } else if (V > T->v) {
+            return check(T->Right, V);
+        } else {
+            return 0;
+        }
+    } else {
+        if (V == T->v) {
+            T->flag = 1;
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}
+
+int Judge(Tree T, int N) {
+    int i, V, flag = 0; // flag代表树0一致，1代表已经不一致
+
+    scanf("%d", &V);
+    if (V != T->v) {
+        flag = 1;
+    } else {
+        T->flag = 1;
+    }
+    for (i = 1; i < N; i++) {
+        scanf("%d", &V);
+        if ((!flag) && (!check(T, V))) {
+            flag = 1;
+        }
+    }
+    if (flag) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+void Reset(Tree T) {
+    if (T->Left)
+        Reset(T->Left);
+    if (T->Right)
+        Reset(T->Right);
+    T->flag = 0;
+}
+
+void FreeTree(Tree T) {
+    if (T->Left)
+        FreeTree(T->Left);
+    if (T->Right)
+        FreeTree(T->Right);
+    free(T);
 }
