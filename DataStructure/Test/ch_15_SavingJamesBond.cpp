@@ -51,7 +51,7 @@
  */
 
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <cmath>
 #include <queue>
 
